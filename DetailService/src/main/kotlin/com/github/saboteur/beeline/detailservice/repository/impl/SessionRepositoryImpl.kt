@@ -18,14 +18,12 @@ class SessionRepositoryImpl(
                 Session(rs.getString("cell_id"), rs.getString("ctn"))
             }
             val sql = "SELECT cell_id, ctn FROM sessions WHERE cell_id = '$cellId'"
-            val result = template
-                .query(
-                    sql,
-                    rowMapper
-                )
-                .map {
-                    it.ctn
-                }
+            val result =
+                template
+                    .query(sql, rowMapper)
+                    .map {
+                        it.ctn
+                    }
             result
         } catch (e: Exception) {
             logger.error(e) { "Data fetch error for Cell ID = $cellId" }

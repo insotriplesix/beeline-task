@@ -29,10 +29,11 @@ class DetailService(
 
         // TODO: add asynchronous processing
         for (ctn in ctns) {
-            val url = StringBuilder()
-                .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=$ctn")
-                .toString()
+            val url =
+                StringBuilder()
+                    .append(restProperties.profileServiceUrl)
+                    .append("/getProfileByCtn?ctn=$ctn")
+                    .toString()
 
             try {
                 val response = restTemplate.getForObject(url, ProfileDto::class.java)
