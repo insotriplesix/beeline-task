@@ -1,0 +1,21 @@
+server:
+  port: ${SERVER_PORT:8941}
+
+spring:
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    placeholders:
+      schema: ${app.postgres.schema}
+
+app:
+  service-name: ${SERVICE_NAME:profile-service}
+  postgres:
+    driver-class-name: ${POSTGRES_DRIVER:org.postgresql.Driver}
+    jdbc-url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/ps}
+    username: ${POSTGRES_USER:ps}
+    password: ${POSTGRES_PASSWORD:ps}
+    schema: ${POSTGRES_DB:public}
+    connectionTimeout: 2000
+    connection-init-sql: ALTER ROLE ${POSTGRES_USER:ps} SET search_path TO ${POSTGRES_DB:public}
+    connection-test-query: SELECT 1
