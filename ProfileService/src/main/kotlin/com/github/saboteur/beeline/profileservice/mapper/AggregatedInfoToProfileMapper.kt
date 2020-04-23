@@ -9,7 +9,12 @@ object AggregatedInfoToProfileMapper : Mapper<AggregatedInfo, ProfileDto> {
         ProfileDto(
             ctn = from.ctn,
             callerId = from.callerId,
-            name = from.firstName ?: "" + from.lastName ?: "",
+            name = StringBuilder()
+                .append(from.lastName ?: "")
+                .append(" ")
+                .append(from.firstName ?: "")
+                .ifBlank { "" }
+                .toString(),
             email = from.email ?: ""
         )
 
