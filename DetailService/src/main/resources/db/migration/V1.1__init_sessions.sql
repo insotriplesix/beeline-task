@@ -1,6 +1,6 @@
 -- Init 'sessions' table
--- Note: The maximum lengths for 'cid' and 'ctn' based on these articles:
---   'cid': https://en.wikipedia.org/wiki/GSM_Cell_ID
+-- Note: The maximum lengths for 'cell_id' and 'ctn' based on these articles:
+--   'cell_id': https://en.wikipedia.org/wiki/GSM_Cell_ID
 --   'ctn': https://en.wikipedia.org/wiki/Telephone_numbering_plan
 
 CREATE TABLE IF NOT EXISTS ${schema}.sessions (
