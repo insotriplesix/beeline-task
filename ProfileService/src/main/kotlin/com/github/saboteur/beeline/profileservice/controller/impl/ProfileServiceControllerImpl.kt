@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @EnableAsync
 class ProfileServiceControllerImpl(
-    private val detailService: ProfileService
+    private val profileService: ProfileService
 ) : ProfileServiceControllerApi {
 
     override fun getCallerIdByCtn(ctn: String): ResponseEntity<String> {
-        val callerId = detailService.getCallerId(ctn)
+        val callerId = profileService.getCallerId(ctn)
         return ResponseEntity
             .status(
                 if (callerId.isEmpty() || callerId.isBlank())
