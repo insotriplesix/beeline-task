@@ -23,11 +23,9 @@ class SessionRepositoryImpl(
                     sql,
                     rowMapper
                 )
-                .asSequence()
                 .map {
                     it.ctn
                 }
-                .toList()
             result
         } catch (e: Exception) {
             logger.error(e) { "Data fetch error for Cell ID = $cellId" }
