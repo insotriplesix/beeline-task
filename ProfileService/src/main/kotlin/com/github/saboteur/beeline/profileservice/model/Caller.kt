@@ -1,8 +1,8 @@
 package com.github.saboteur.beeline.profileservice.model
 
 data class Caller(
-    var ctn: String,
-    var callerId: String
+    val ctn: String,
+    val callerId: String
 ) {
     companion object {
         val empty = Caller(

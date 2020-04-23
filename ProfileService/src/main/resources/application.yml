@@ -16,6 +16,11 @@ app:
     username: ${POSTGRES_USER:ps}
     password: ${POSTGRES_PASSWORD:ps}
     schema: ${POSTGRES_DB:public}
-    connectionTimeout: 2000
+    connection-timeout: 2000
     connection-init-sql: ALTER ROLE ${POSTGRES_USER:ps} SET search_path TO ${POSTGRES_DB:public}
     connection-test-query: SELECT 1
+  rest:
+    external-service-url: ${EXTERNAL_SERVICE_URL:https://randomuser.me}
+    external-service-name: randomuser
+    connection-timeout: 2000
+    fields: name,email

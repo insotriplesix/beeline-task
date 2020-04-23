@@ -18,16 +18,8 @@ class CallerRepositoryImpl(
                 Caller(rs.getString("ctn"), rs.getString("caller_id"))
             }
             val sql = "SELECT ctn, caller_id FROM callers WHERE ctn = '$ctn'"
-            val result = template
-                .query(
-                    sql,
-                    rowMapper
-                )
-                .map {
-                    it.callerId
-                }
-                .toString()
-            result
+            val result = template.queryForObject(sql, rowMapper)
+            result?.callerId ?: ""
         } catch (e: Exception) {
             logger.error(e) { "Data fetch error for CTN = $ctn" }
             ""
