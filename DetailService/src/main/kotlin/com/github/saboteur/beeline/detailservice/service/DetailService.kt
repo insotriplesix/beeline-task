@@ -10,8 +10,8 @@ class DetailService(
     private val sessionRepository: SessionRepository
 ) {
 
-    fun getCallerProfile(cid: String): List<CallerProfile> {
-        val ctns = sessionRepository.findAllCtnByCid(cid)
+    fun getCallerProfile(cellId: String): List<CallerProfile> {
+        val ctns = sessionRepository.findAllCtnByCellId(cellId)
 
         // @TODO: send to kafka instead
         logger.info { "$ctns" }

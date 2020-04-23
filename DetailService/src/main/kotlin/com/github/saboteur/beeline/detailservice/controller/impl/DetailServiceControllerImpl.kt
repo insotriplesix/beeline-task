@@ -16,8 +16,8 @@ class DetailServiceControllerImpl(
     private val detailService: DetailService
 ) : DetailServiceControllerApi {
 
-    override fun getCallerProfileByCid(cid: String): ResponseEntity<List<CallerProfile>> {
-        val profiles = detailService.getCallerProfile(cid)
+    override fun getCallerProfileByCellId(cellId: String): ResponseEntity<List<CallerProfile>> {
+        val profiles = detailService.getCallerProfile(cellId)
         return ResponseEntity
             .status(
                 if (profiles.isEmpty())

@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("api")
 interface DetailServiceControllerApi {
 
-    @ApiOperation(value = "Get caller profiles by 'cid' number")
-    @GetMapping("/$API_VERSION/detailservice/getCallerProfileByCid")
-    fun getCallerProfileByCid(
-        @ApiParam("CID (Cell ID) - base station number", example = "12345")
-        @RequestParam(value = "cid", required = true)
-        cid: String
+    @ApiOperation(value = "Get caller profiles by given cell id number")
+    @GetMapping("/$API_VERSION/detailservice/getCallerProfileByCellId")
+    fun getCallerProfileByCellId(
+        @ApiParam("Cell ID - base station number", example = "12345")
+        @RequestParam(value = "cellId", required = true)
+        cellId: String
     ): ResponseEntity<List<CallerProfile>>
 
     companion object {

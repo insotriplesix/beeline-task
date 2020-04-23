@@ -9,8 +9,8 @@ data class CallerProfile(
     @ApiModelProperty(value = "ctn", required = true)
     val ctn: String,
 
-    @ApiModelProperty(value = "cid", required = true)
-    val cid: String,
+    @ApiModelProperty(value = "callerId", required = true)
+    val callerId: String,
 
     @ApiModelProperty(value = "name")
     val name: String,
@@ -22,7 +22,7 @@ data class CallerProfile(
     companion object {
         val empty = CallerProfile(
             ctn = "",
-            cid = "",
+            callerId = "",
             name = "",
             email = ""
         )

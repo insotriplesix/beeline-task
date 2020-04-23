@@ -12,12 +12,12 @@ class SessionRepositoryImpl(
     private val template: JdbcTemplate
 ) : SessionRepository {
 
-    override fun findAllCtnByCid(cid: String): List<String> =
+    override fun findAllCtnByCellId(cellId: String): List<String> =
         try {
             val rowMapper = RowMapper { rs, _ ->
                 Session(rs.getString("cell_id"), rs.getString("ctn"))
             }
-            val sql = "SELECT cell_id, ctn FROM sessions WHERE cell_id = '$cid'"
+            val sql = "SELECT cell_id, ctn FROM sessions WHERE cell_id = '$cellId'"
             val result = template
                 .query(
                     sql,
@@ -30,7 +30,7 @@ class SessionRepositoryImpl(
                 .toList()
             result
         } catch (e: Exception) {
-            logger.error(e) { "Data fetch error for CID = $cid" }
+            logger.error(e) { "Data fetch error for Cell ID = $cellId" }
             emptyList()
         }
 
