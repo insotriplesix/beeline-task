@@ -1,0 +1,51 @@
+version: '3.0'
+services: 
+  detail-service:
+    image: detail-service
+    build: 
+      context: ./DetailService
+      dockerfile: Dockerfile
+    restart: on-failure
+    hostname: detailservice
+    container_name: beeline-detail-serv
+    ports:
+      - '8841:8080'
+    environment: 
+      SERVER_PORT: 8841
+      POSTGRES_URL: jdbc:postgresql://postgresql:5432/ds
+      POSTGRES_USER: ds
+      POSTGRES_PASSWORD: ds
+      PROFILE_SERVICE_URL: http://profile-service:8941/api/v1/profileservice
+    depends_on: 
+      - profile-service
+      - postgresql
+  profile-service:
+    image: profile-service
+    build: 
+      context: ./ProfileService
+      dockerfile: Dockerfile
+    restart: on-failure
+    hostname: profileservice
+    container_name: beeline-profile-serv
+    ports:
+      - '8941:8080'
+    environment: 
+      SERVER_PORT: 8941
+      POSTGRES_URL: jdbc:postgresql://postgresql:5432/ps
+      POSTGRES_USER: ps
+      POSTGRES_PASSWORD: ps
+      EXTERNAL_SERVICE_URL: https://randomuser.me
+    depends_on: 
+      - postgresql
+  postgresql:
+    image: postgres:latest
+    restart: always
+    container_name: beeline-postgres-db
+    ports:
+      - '5432:5432'
+    environment: 
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./scripts/postgres-init.sql:/docker-entrypoint-initdb.d/001-postgres-init.sql
