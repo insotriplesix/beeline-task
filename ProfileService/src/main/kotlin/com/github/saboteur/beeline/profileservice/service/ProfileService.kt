@@ -9,7 +9,7 @@ import com.github.saboteur.beeline.profileservice.model.ExternalServiceType
 import com.github.saboteur.beeline.profileservice.repository.CallerRepository
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
-import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 
 @Service
@@ -20,12 +20,7 @@ class ProfileService(
 ) {
 
     fun getProfile(ctn: String): ProfileDto {
-
-        // TODO: add asynchronous processing
         val aggregatedInfo = getAggregatedInfo(ctn)
-
-        logger.info { "Aggregated info: $aggregatedInfo" }
-
         return AggregatedInfoToProfileMapper[aggregatedInfo]
     }
 
@@ -41,7 +36,9 @@ class ProfileService(
             firstName = profile?.results?.get(0)?.name?.first,
             lastName = profile?.results?.get(0)?.name?.last,
             email = profile?.results?.get(0)?.email
-        )
+        ).also {
+            logger.debug { "Aggregated info: $it" }
+        }
     }
 
     private fun getProfileFromExternalService(ctn: String): RandomUserProfileDto? =
@@ -65,13 +62,13 @@ class ProfileService(
                 .append(restProperties.fields)
                 .toString()
 
-        logger.info { "External service URL: $url" }
+        logger.debug { "Thread = ${Thread.currentThread().name}, URL = $url" }
 
         var result: RandomUserProfileDto? = null
 
         try {
             result = restTemplate.getForObject(url, RandomUserProfileDto::class.java)
-        } catch (e: HttpClientErrorException) {
+        } catch (e: RestClientResponseException) {
             logger.error { e.localizedMessage }
         }
 

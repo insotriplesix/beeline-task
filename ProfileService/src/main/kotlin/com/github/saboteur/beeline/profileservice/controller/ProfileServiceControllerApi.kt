@@ -17,7 +17,7 @@ interface ProfileServiceControllerApi {
 
     @ApiOperation(value = "Get profile by given ctn number")
     @GetMapping("/$API_VERSION/profileservice/getProfileByCtn")
-    fun getProfileByCtn(
+    suspend fun getProfileByCtn(
         @ApiParam("CTN (Cellular Telephone Number) - a mobile number", example = "1234567890")
         @RequestParam(value = "ctn", required = true)
         ctn: String
