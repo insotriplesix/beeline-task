@@ -9,11 +9,11 @@ To build the project and run docker containers change the access permissions for
 ~$ ./run.sh
 ```
 
-Your system should contains several packages which are listed below. The script automatically checks the system for them and aborts if they don't installed.
+Your system must contain several packages which are listed below. The script automatically checks for their presence and aborts if at least one of them has not been installed.
 
 Packages: `openjdk-8-jre, maven, docker, docker-compose`
 
-If the script succeeds, you will see the 3 new containers running in your system:
+If the script succeeds, you will see three new containers running in your system:
 
 ```bash
 ~$ docker ps -a
@@ -30,7 +30,7 @@ Now you can check that it's working by sending the `GET` request to a service AP
 172.18.0.4 <---
 ```
 
-Finally, you can use the `curl` command (or your favourite browser) and use this URL `http://172.18.0.4:8841/api/v1/detailservice/getCallerProfileByCellId?cellId=11111` to test the service. The response should looks similar to this:
+Finally, you can use the `curl` command (or your favourite browser) and paste this URL `http://172.18.0.4:8841/api/v1/detailservice/getCallerProfileByCellId?cellId=11111` to test the service. The response should look similar to this one:
 
 ```json
 [
