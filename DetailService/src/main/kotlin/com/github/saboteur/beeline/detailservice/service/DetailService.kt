@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 import java.util.concurrent.*
+import kotlin.system.measureTimeMillis
 
 @Service
 class DetailService(
@@ -29,27 +30,33 @@ class DetailService(
             return emptyList()
         }
 
-        val result = ConcurrentLinkedDeque<CallerProfile>()
+        val result = ConcurrentLinkedQueue<CallerProfile>()
 
-        runBlocking {
-            ctns.forEach { ctn ->
-                launch(Dispatchers.IO) {
-                    val url =
-                        StringBuilder()
-                            .append(restProperties.profileServiceUrl)
-                            .append("/getProfileByCtn?ctn=$ctn")
-                            .toString()
+        measureTimeMillis {
+            runBlocking {
+                ctns.forEach { ctn ->
+                    launch(Dispatchers.IO) {
+                        val url =
+                            StringBuilder()
+                                .append(restProperties.profileServiceUrl)
+                                .append("/getProfileByCtn?ctn=$ctn")
+                                .toString()
 
-                    logger.debug { "Thread = ${Thread.currentThread().name}, URL = $url" }
+                        logger.debug { "Thread = ${Thread.currentThread().name}, URL = $url" }
 
-                    try {
-                        val response = restTemplate.getForObject(url, ProfileDto::class.java)
-                        if (response != null)
-                            result.add(ProfileToCallerProfileMapper[response])
-                    } catch (e: RestClientResponseException) {
-                        logger.error { e.localizedMessage }
+                        try {
+                            val response = restTemplate.getForObject(url, ProfileDto::class.java)
+                            if (response != null)
+                                result.add(ProfileToCallerProfileMapper[response])
+                        } catch (e: RestClientResponseException) {
+                            logger.error { e.localizedMessage }
+                        }
                     }
                 }
+            }
+        }.also { time ->
+            logger.info {
+                "Request for Cell ID = $cellId was processed in $time ms"
             }
         }
 
