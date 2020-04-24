@@ -6,12 +6,10 @@ import com.github.saboteur.beeline.detailservice.service.DetailService
 import io.swagger.annotations.Api
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.web.bind.annotation.RestController
 
 @Api
 @RestController
-@EnableAsync
 class DetailServiceControllerImpl(
     private val detailService: DetailService
 ) : DetailServiceControllerApi {
