@@ -28,6 +28,7 @@
         <kotlin-logging.version>1.7.9</kotlin-logging.version>
         <jackson-core.version>2.10.2</jackson-core.version>
         <jackson-module.version>2.10.2</jackson-module.version>
+        <mockk.version>1.9.3</mockk.version>
     </properties>
 
     <dependencies>
@@ -133,6 +134,13 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
             <version>${jackson-module.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk</artifactId>
+            <version>${mockk.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
