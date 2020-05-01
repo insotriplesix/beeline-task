@@ -1,5 +1,7 @@
 # beeline-task
 
+![Beeline-CI](https://github.com/5aboteur/beeline-task/workflows/Beeline-CI/badge.svg)
+
 ## Linux
 
 To build the project and run docker containers change the access permissions for `run.sh` script and run it:
