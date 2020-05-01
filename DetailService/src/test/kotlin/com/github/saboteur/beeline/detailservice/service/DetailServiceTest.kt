@@ -17,6 +17,8 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ArgumentsSource
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 
@@ -92,11 +94,16 @@ class DetailServiceTest {
         Assertions.assertThat(answer).isEqualTo(expected)
     }
 
-    @Test
-    fun getCallerProfileForValidCellIdAndAvailableProfileService() {
+    @ParameterizedTest
+    @ArgumentsSource(DetailServiceDataProvider.GetCallerProfile::class)
+    fun getCallerProfileForValidCellIdAndAvailableProfileService(
+        providedCallerProfiles: List<CallerProfile>,
+        providedProfileDtos: List<ProfileDto>,
+        providedCtns: List<String>
+    ) {
         every {
             sessionRepository.findAllCtnByCellId("TEST")
-        } returns listOf("1234567890", "1234567891")
+        } returns providedCtns
 
         coEvery {
             restProperties.profileServiceUrl
@@ -105,49 +112,25 @@ class DetailServiceTest {
         val urls = listOf(
             StringBuilder()
                 .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=1234567890")
+                .append("/getProfileByCtn?ctn=${providedCtns[0]}")
                 .toString(),
             StringBuilder()
                 .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=1234567891")
+                .append("/getProfileByCtn?ctn=${providedCtns[1]}")
                 .toString()
         )
 
         coEvery {
             restTemplate.getForObject(urls[0], ProfileDto::class.java)
-        } returns ProfileDto(
-            ctn = "1234567890",
-            callerId = "TEST",
-            name = "",
-            email = ""
-        )
+        } returns providedProfileDtos[0]
 
         coEvery {
             restTemplate.getForObject(urls[1], ProfileDto::class.java)
-        } returns ProfileDto(
-            ctn = "1234567891",
-            callerId = "TEST",
-            name = "",
-            email = ""
-        )
+        } returns providedProfileDtos[1]
 
         val answer = detailService.getCallerProfile("TEST")
-        val expected = listOf(
-            CallerProfile(
-                ctn = "1234567890",
-                callerId = "TEST",
-                name = "",
-                email = ""
-            ),
-            CallerProfile(
-                ctn = "1234567891",
-                callerId = "TEST",
-                name = "",
-                email = ""
-            )
-        )
 
-        Assertions.assertThat(answer).containsAll(expected)
+        Assertions.assertThat(answer).containsAll(providedCallerProfiles)
     }
 
 }
