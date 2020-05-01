@@ -69,6 +69,9 @@ class ProfileServiceImpl(
 
         try {
             result = restTemplate.getForObject(url, RandomUserProfileDto::class.java)
+            if (result?.error != null) {
+                logger.info { "Cannot fetch data from external service: $result.error" }
+            }
         } catch (e: RestClientResponseException) {
             logger.error { "An exception occurred for CTN = $ctn: " + e.localizedMessage }
         }
