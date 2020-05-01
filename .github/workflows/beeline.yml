@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: sudo apt install openjdk-8-jre maven docker docker-compose
+      run: sudo apt-get update && sudo apt install openjdk-8-jre maven docker docker-compose
     - name: Grant execute permission for run.sh script
       run: chmod +x run.sh
     - name: Build the project
