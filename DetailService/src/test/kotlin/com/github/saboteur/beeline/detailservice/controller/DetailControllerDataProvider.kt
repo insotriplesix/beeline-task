@@ -19,7 +19,6 @@ class DetailControllerDataProvider {
 
             return Stream.of(Arguments.of(providedCallerProfile))
         }
-
     }
 
 }
