@@ -8,4 +8,13 @@ data class ProfileDto(
     val callerId: String,
     val name: String,
     val email: String
-)
+) {
+    companion object {
+        val empty = ProfileDto(
+            ctn = "",
+            callerId = "",
+            name = "",
+            email = ""
+        )
+    }
+}
