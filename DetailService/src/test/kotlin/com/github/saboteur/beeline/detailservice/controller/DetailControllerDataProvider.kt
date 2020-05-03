@@ -13,7 +13,7 @@ class DetailControllerDataProvider {
             val providedCallerProfile = CallerProfile(
                 ctn = "1234567890",
                 callerId = "03e17537-30de-4598-a816-108945fa68b4",
-                name = "Pavel Durov",
+                name = "Durov Pavel",
                 email = "durov@hotmail.com"
             )
 

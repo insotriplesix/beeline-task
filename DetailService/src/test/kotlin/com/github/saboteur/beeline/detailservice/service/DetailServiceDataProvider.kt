@@ -15,13 +15,13 @@ class DetailServiceDataProvider {
                 CallerProfile(
                     ctn = "1234567890",
                     callerId = "03e17537-30de-4598-a816-108945fa68b4",
-                    name = "Pavel Durov",
+                    name = "Durov Pavel",
                     email = "pdurov@hotmail.com"
                 ),
                 CallerProfile(
                     ctn = "1234567891",
                     callerId = "3ad35c07-12ff-42de-a36d-e4cc21e9c500",
-                    name = "Nikolai Durov",
+                    name = "Durov Nikolai",
                     email = "ndurov@hotmail.com"
                 )
             )
@@ -30,13 +30,13 @@ class DetailServiceDataProvider {
                 ProfileDto(
                     ctn = "1234567890",
                     callerId = "03e17537-30de-4598-a816-108945fa68b4",
-                    name = "Pavel Durov",
+                    name = "Durov Pavel",
                     email = "pdurov@hotmail.com"
                 ),
                 ProfileDto(
                     ctn = "1234567891",
                     callerId = "3ad35c07-12ff-42de-a36d-e4cc21e9c500",
-                    name = "Nikolai Durov",
+                    name = "Durov Nikolai",
                     email = "ndurov@hotmail.com"
                 )
             )
