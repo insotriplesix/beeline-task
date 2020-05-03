@@ -17,6 +17,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
+import org.junit.jupiter.params.provider.ArgumentsSources
 import org.springframework.web.client.RestTemplate
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -37,6 +38,7 @@ class ProfileServiceTest {
 
     @BeforeAll
     fun setUp() {
+        // setup stub
     }
 
     @AfterAll
@@ -85,49 +87,11 @@ class ProfileServiceTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(ProfileServiceDataProvider.GetProfileWithCallerId::class)
-    fun getProfileWhenSuchCtnInDatabase(
-        providedProfile: ProfileDto,
-        providedRandomUserProfileDto: RandomUserProfileDto,
-        providedCallerId: String
-    ) {
-        every {
-            callerRepository.findCallerIdByCtn("1234567890")
-        } returns providedCallerId
-
-        every {
-            restProperties.externalServiceName
-        } returns "randomuser"
-
-        every {
-            restProperties.externalServiceUrl
-        } returns "externalServiceUrl"
-
-        every {
-            restProperties.fields
-        } returns "includedFields"
-
-        val url =
-            StringBuilder()
-                .append(restProperties.externalServiceUrl)
-                .append("/api/?phone=")
-                .append("1234567890")
-                .append("&inc=")
-                .append(restProperties.fields)
-                .toString()
-
-        every {
-            restTemplate.getForObject(url, RandomUserProfileDto::class.java)
-        } returns providedRandomUserProfileDto
-
-        val answer = profileService.getProfile("1234567890")
-
-        Assertions.assertThat(answer).isEqualTo(providedProfile)
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(ProfileServiceDataProvider.GetProfileWithError::class)
-    fun getProfileWhenErrorInExternalService(
+    @ArgumentsSources(
+        ArgumentsSource(ProfileServiceDataProvider.GetProfileWithCallerId::class),
+        ArgumentsSource(ProfileServiceDataProvider.GetProfileWithError::class)
+    )
+    fun getProfileWhenSuchCtnInDatabaseOrAnErrorInExternalService(
         providedProfile: ProfileDto,
         providedRandomUserProfileDto: RandomUserProfileDto,
         providedCallerId: String

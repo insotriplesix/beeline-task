@@ -44,7 +44,7 @@ class ProfileServiceDataProvider {
         override fun provideArguments(extensionContext: ExtensionContext?): Stream<out Arguments> {
             val providedProfile = ProfileDto(
                 ctn = "1234567890",
-                callerId = "03e17537-30de-4598-a816-108945fa68b4",
+                callerId = exampleId,
                 name = "Durov Pavel",
                 email = "pdurov@hotmail.com"
             )
@@ -65,7 +65,7 @@ class ProfileServiceDataProvider {
                 error = null
             )
 
-            val providedCallerId = "03e17537-30de-4598-a816-108945fa68b4"
+            val providedCallerId = exampleId
 
             return Stream.of(Arguments.of(providedProfile, providedRandomUserProfileDto, providedCallerId))
         }
@@ -75,7 +75,7 @@ class ProfileServiceDataProvider {
         override fun provideArguments(extensionContext: ExtensionContext?): Stream<out Arguments> {
             val providedProfile = ProfileDto(
                 ctn = "1234567890",
-                callerId = "03e17537-30de-4598-a816-108945fa68b4",
+                callerId = exampleId,
                 name = "",
                 email = ""
             )
@@ -86,10 +86,14 @@ class ProfileServiceDataProvider {
                 error = "This is error! Error?! THIS IS TEST CASE!!!!111"
             )
 
-            val providedCallerId = "03e17537-30de-4598-a816-108945fa68b4"
+            val providedCallerId = exampleId
 
             return Stream.of(Arguments.of(providedProfile, providedRandomUserProfileDto, providedCallerId))
         }
+    }
+
+    companion object {
+        const val exampleId = "03e17537-30de-4598-a816-108945fa68b4"
     }
 
 }
