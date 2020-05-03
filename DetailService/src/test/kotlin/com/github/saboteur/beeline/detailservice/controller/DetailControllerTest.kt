@@ -37,6 +37,7 @@ class DetailControllerTest {
 
     @Test
     fun testApiVersion() {
+        Assertions.assertThat(DetailServiceControllerApi.Companion).isNotNull
         Assertions.assertThat(DetailServiceControllerApi.API_VERSION).isEqualTo("v1")
     }
 

@@ -42,8 +42,29 @@ class DetailServiceDataProvider {
             )
 
             val providedCtns = listOf("1234567890", "1234567891")
+            val providedServiceUrl = "http://localhost:8941/api/v1/profileservice"
 
-            return Stream.of(Arguments.of(providedCallerProfiles, providedProfileDtos, providedCtns))
+            val providedReqUrls = listOf(
+                StringBuilder()
+                    .append(providedServiceUrl)
+                    .append("/getProfileByCtn?ctn=${providedCtns[0]}")
+                    .toString(),
+                StringBuilder()
+                    .append(providedServiceUrl)
+                    .append("/getProfileByCtn?ctn=${providedCtns[1]}")
+                    .toString()
+            )
+
+            val arguments =
+                Arguments.of(
+                    providedCallerProfiles,
+                    providedProfileDtos,
+                    providedCtns,
+                    providedServiceUrl,
+                    providedReqUrls
+                )
+
+            return Stream.of(arguments)
         }
     }
 

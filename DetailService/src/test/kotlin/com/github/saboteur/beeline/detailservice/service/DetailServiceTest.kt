@@ -61,33 +61,29 @@ class DetailServiceTest {
         Assertions.assertThat(answer).isEqualTo(expected)
     }
 
-    @Test
-    fun getCallerProfileForValidCellIdButUnavailableProfileService() {
+    @ParameterizedTest
+    @ArgumentsSource(DetailServiceDataProvider.GetCallerProfile::class)
+    fun getCallerProfileForValidCellIdButUnavailableProfileService(
+        providedCallerProfiles: List<CallerProfile>,
+        providedProfileDtos: List<ProfileDto>,
+        providedCtns: List<String>,
+        providedServiceUrl: String,
+        providedReqUrls: List<String>
+    ) {
         every {
             sessionRepository.findAllCtnsByCellId(testCellId)
-        } returns listOf("1234567890", "1234567891")
+        } returns providedCtns
 
         coEvery {
             restProperties.profileServiceUrl
-        } returns "http://localhost:8941/api/v1/profileservice"
-
-        val urls = listOf(
-            StringBuilder()
-                .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=1234567890")
-                .toString(),
-            StringBuilder()
-                .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=1234567891")
-                .toString()
-        )
+        } returns providedServiceUrl
 
         coEvery {
-            restTemplate.getForObject(urls[0], ProfileDto::class.java)
+            restTemplate.getForObject(providedReqUrls[0], ProfileDto::class.java)
         } throws ResourceAccessException("")
 
         coEvery {
-            restTemplate.getForObject(urls[1], ProfileDto::class.java)
+            restTemplate.getForObject(providedReqUrls[1], ProfileDto::class.java)
         } throws ResourceAccessException("")
 
         val answer = detailService.getCallerProfile(testCellId)
@@ -96,33 +92,29 @@ class DetailServiceTest {
         Assertions.assertThat(answer).isEqualTo(expected)
     }
 
-    @Test
-    fun getCallerProfileForValidCellIdButExceptionThrown() {
+    @ParameterizedTest
+    @ArgumentsSource(DetailServiceDataProvider.GetCallerProfile::class)
+    fun getCallerProfileForValidCellIdButExceptionThrown(
+        providedCallerProfiles: List<CallerProfile>,
+        providedProfileDtos: List<ProfileDto>,
+        providedCtns: List<String>,
+        providedServiceUrl: String,
+        providedReqUrls: List<String>
+    ) {
         every {
             sessionRepository.findAllCtnsByCellId(testCellId)
-        } returns listOf("555555555", "444444444")
+        } returns providedCtns
 
         coEvery {
             restProperties.profileServiceUrl
-        } returns "http://localhost:8941/api/v1/profileservice"
-
-        val urls = listOf(
-            StringBuilder()
-                .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=555555555")
-                .toString(),
-            StringBuilder()
-                .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=444444444")
-                .toString()
-        )
+        } returns providedServiceUrl
 
         coEvery {
-            restTemplate.getForObject(urls[0], ProfileDto::class.java)
+            restTemplate.getForObject(providedReqUrls[0], ProfileDto::class.java)
         } throws RestClientResponseException("message", 0, "status", null, null, null)
 
         coEvery {
-            restTemplate.getForObject(urls[1], ProfileDto::class.java)
+            restTemplate.getForObject(providedReqUrls[1], ProfileDto::class.java)
         } throws RestClientResponseException("message", 0, "status", null, null, null)
 
         val answer = detailService.getCallerProfile(testCellId)
@@ -136,7 +128,9 @@ class DetailServiceTest {
     fun getCallerProfileForValidCellIdAndAvailableProfileService(
         providedCallerProfiles: List<CallerProfile>,
         providedProfileDtos: List<ProfileDto>,
-        providedCtns: List<String>
+        providedCtns: List<String>,
+        providedServiceUrl: String,
+        providedReqUrls: List<String>
     ) {
         every {
             sessionRepository.findAllCtnsByCellId(testCellId)
@@ -144,25 +138,14 @@ class DetailServiceTest {
 
         coEvery {
             restProperties.profileServiceUrl
-        } returns "http://localhost:8941/api/v1/profileservice"
-
-        val urls = listOf(
-            StringBuilder()
-                .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=${providedCtns[0]}")
-                .toString(),
-            StringBuilder()
-                .append(restProperties.profileServiceUrl)
-                .append("/getProfileByCtn?ctn=${providedCtns[1]}")
-                .toString()
-        )
+        } returns providedServiceUrl
 
         coEvery {
-            restTemplate.getForObject(urls[0], ProfileDto::class.java)
+            restTemplate.getForObject(providedReqUrls[0], ProfileDto::class.java)
         } returns providedProfileDtos[0]
 
         coEvery {
-            restTemplate.getForObject(urls[1], ProfileDto::class.java)
+            restTemplate.getForObject(providedReqUrls[1], ProfileDto::class.java)
         } returns providedProfileDtos[1]
 
         val answer = detailService.getCallerProfile(testCellId)
