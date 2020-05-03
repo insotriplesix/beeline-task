@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 import org.junit.jupiter.params.provider.ArgumentsSources
+import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -50,7 +51,9 @@ class ProfileServiceTest {
     @ArgumentsSource(ProfileServiceDataProvider.GetProfileWithoutCallerId::class)
     fun getProfileWhenNoSuchCtnInDatabase(
         providedProfile: ProfileDto,
-        providedRandomUserProfileDto: RandomUserProfileDto
+        providedRandomUserProfileDto: RandomUserProfileDto,
+        providedRestProperties: RestProperties,
+        providedReqUrl: String
     ) {
         every {
             callerRepository.findCallerIdByCtn("TEST")
@@ -58,27 +61,18 @@ class ProfileServiceTest {
 
         every {
             restProperties.externalServiceName
-        } returns "randomuser"
+        } returns providedRestProperties.externalServiceName
 
         every {
             restProperties.externalServiceUrl
-        } returns "externalServiceUrl"
+        } returns providedRestProperties.externalServiceUrl
 
         every {
             restProperties.fields
-        } returns "includedFields"
-
-        val url =
-            StringBuilder()
-                .append(restProperties.externalServiceUrl)
-                .append("/api/?phone=")
-                .append("TEST")
-                .append("&inc=")
-                .append(restProperties.fields)
-                .toString()
+        } returns providedRestProperties.fields
 
         every {
-            restTemplate.getForObject(url, RandomUserProfileDto::class.java)
+            restTemplate.getForObject(providedReqUrl, RandomUserProfileDto::class.java)
         } returns providedRandomUserProfileDto
 
         val answer = profileService.getProfile("TEST")
@@ -94,7 +88,9 @@ class ProfileServiceTest {
     fun getProfileWhenSuchCtnInDatabaseOrAnErrorInExternalService(
         providedProfile: ProfileDto,
         providedRandomUserProfileDto: RandomUserProfileDto,
-        providedCallerId: String
+        providedCallerId: String,
+        providedRestProperties: RestProperties,
+        providedReqUrl: String
     ) {
         every {
             callerRepository.findCallerIdByCtn("1234567890")
@@ -102,30 +98,72 @@ class ProfileServiceTest {
 
         every {
             restProperties.externalServiceName
-        } returns "randomuser"
+        } returns providedRestProperties.externalServiceName
 
         every {
             restProperties.externalServiceUrl
-        } returns "externalServiceUrl"
+        } returns providedRestProperties.externalServiceUrl
 
         every {
             restProperties.fields
-        } returns "includedFields"
-
-        val url =
-            StringBuilder()
-                .append(restProperties.externalServiceUrl)
-                .append("/api/?phone=")
-                .append("1234567890")
-                .append("&inc=")
-                .append(restProperties.fields)
-                .toString()
+        } returns providedRestProperties.fields
 
         every {
-            restTemplate.getForObject(url, RandomUserProfileDto::class.java)
+            restTemplate.getForObject(providedReqUrl, RandomUserProfileDto::class.java)
         } returns providedRandomUserProfileDto
 
         val answer = profileService.getProfile("1234567890")
+
+        Assertions.assertThat(answer).isEqualTo(providedProfile)
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(ProfileServiceDataProvider.GetProfileWithUnknownType::class)
+    fun getProfileWhenUnknownTypeOfExternalServiceProvided(
+        providedProfile: ProfileDto
+    ) {
+        every {
+            callerRepository.findCallerIdByCtn("TEST")
+        } returns ""
+
+        every {
+            restProperties.externalServiceName
+        } returns "unknown"
+
+        val answer = profileService.getProfile("TEST")
+
+        Assertions.assertThat(answer).isEqualTo(providedProfile)
+    }
+
+
+    @ParameterizedTest
+    @ArgumentsSource(ProfileServiceDataProvider.GetProfileWhenExceptionThrown::class)
+    fun getProfileWhenExceptionThrown(
+        providedProfile: ProfileDto,
+        providedRestProperties: RestProperties,
+        providedReqUrl: String
+    ) {
+        every {
+            callerRepository.findCallerIdByCtn("TEST")
+        } returns ""
+
+        every {
+            restProperties.externalServiceName
+        } returns providedRestProperties.externalServiceName
+
+        every {
+            restProperties.externalServiceUrl
+        } returns providedRestProperties.externalServiceUrl
+
+        every {
+            restProperties.fields
+        } returns providedRestProperties.fields
+
+        every {
+            restTemplate.getForObject(providedReqUrl, RandomUserProfileDto::class.java)
+        } throws RestClientResponseException("message", 0, "status", null, null, null)
+
+        val answer = profileService.getProfile("TEST")
 
         Assertions.assertThat(answer).isEqualTo(providedProfile)
     }

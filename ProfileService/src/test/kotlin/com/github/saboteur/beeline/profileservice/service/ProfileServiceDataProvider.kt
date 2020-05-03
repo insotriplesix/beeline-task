@@ -1,5 +1,6 @@
 package com.github.saboteur.beeline.profileservice.service
 
+import com.github.saboteur.beeline.profileservice.config.properties.RestProperties
 import com.github.saboteur.beeline.profileservice.dto.ProfileDto
 import com.github.saboteur.beeline.profileservice.dto.external.randomuser.RandomUserNameDto
 import com.github.saboteur.beeline.profileservice.dto.external.randomuser.RandomUserProfileDto
@@ -36,7 +37,29 @@ class ProfileServiceDataProvider {
                 error = null
             )
 
-            return Stream.of(Arguments.of(providedProfile, providedRandomUserProfileDto))
+            val providedRestProperties = RestProperties(
+                externalServiceUrl = "externalServiceUrl",
+                externalServiceName = "randomuser",
+                fields = "name,email"
+            )
+
+            val providedReqUrl =
+                StringBuilder()
+                    .append(providedRestProperties.externalServiceUrl)
+                    .append("/api/?phone=")
+                    .append("TEST")
+                    .append("&inc=")
+                    .append(providedRestProperties.fields)
+                    .toString()
+
+            val arguments = Arguments.of(
+                providedProfile,
+                providedRandomUserProfileDto,
+                providedRestProperties,
+                providedReqUrl
+            )
+
+            return Stream.of(arguments)
         }
     }
 
@@ -67,7 +90,30 @@ class ProfileServiceDataProvider {
 
             val providedCallerId = exampleId
 
-            return Stream.of(Arguments.of(providedProfile, providedRandomUserProfileDto, providedCallerId))
+            val providedRestProperties = RestProperties(
+                externalServiceUrl = "externalServiceUrl",
+                externalServiceName = "randomuser",
+                fields = "name,email"
+            )
+
+            val providedReqUrl =
+                StringBuilder()
+                    .append(providedRestProperties.externalServiceUrl)
+                    .append("/api/?phone=")
+                    .append("1234567890")
+                    .append("&inc=")
+                    .append(providedRestProperties.fields)
+                    .toString()
+
+            val arguments = Arguments.of(
+                providedProfile,
+                providedRandomUserProfileDto,
+                providedCallerId,
+                providedRestProperties,
+                providedReqUrl
+            )
+
+            return Stream.of(arguments)
         }
     }
 
@@ -88,7 +134,71 @@ class ProfileServiceDataProvider {
 
             val providedCallerId = exampleId
 
-            return Stream.of(Arguments.of(providedProfile, providedRandomUserProfileDto, providedCallerId))
+            val providedRestProperties = RestProperties(
+                externalServiceUrl = "externalServiceUrl",
+                externalServiceName = "randomuser",
+                fields = "name,email"
+            )
+
+            val providedReqUrl =
+                StringBuilder()
+                    .append(providedRestProperties.externalServiceUrl)
+                    .append("/api/?phone=")
+                    .append("1234567890")
+                    .append("&inc=")
+                    .append(providedRestProperties.fields)
+                    .toString()
+
+            val arguments = Arguments.of(
+                providedProfile,
+                providedRandomUserProfileDto,
+                providedCallerId,
+                providedRestProperties,
+                providedReqUrl
+            )
+
+            return Stream.of(arguments)
+        }
+    }
+
+    class GetProfileWithUnknownType : ArgumentsProvider {
+        override fun provideArguments(extensionContext: ExtensionContext?): Stream<out Arguments> {
+            val providedProfile = ProfileDto(
+                ctn = "TEST",
+                callerId = "",
+                name = "",
+                email = ""
+            )
+
+            return Stream.of(Arguments.of(providedProfile))
+        }
+    }
+
+    class GetProfileWhenExceptionThrown : ArgumentsProvider {
+        override fun provideArguments(extensionContext: ExtensionContext?): Stream<out Arguments> {
+            val providedProfile = ProfileDto(
+                ctn = "TEST",
+                callerId = "",
+                name = "",
+                email = ""
+            )
+
+            val providedRestProperties = RestProperties(
+                externalServiceUrl = "invalidUrl",
+                externalServiceName = "randomuser",
+                fields = "gender"
+            )
+
+            val providedReqUrl =
+                StringBuilder()
+                    .append(providedRestProperties.externalServiceUrl)
+                    .append("/api/?phone=")
+                    .append("TEST")
+                    .append("&inc=")
+                    .append(providedRestProperties.fields)
+                    .toString()
+
+            return Stream.of(Arguments.of(providedProfile, providedRestProperties, providedReqUrl))
         }
     }
 
