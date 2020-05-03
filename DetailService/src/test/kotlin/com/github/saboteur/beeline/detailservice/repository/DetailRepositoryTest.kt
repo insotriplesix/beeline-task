@@ -1,46 +1,57 @@
 package com.github.saboteur.beeline.detailservice.repository
 
+import com.github.saboteur.beeline.detailservice.model.Session
 import com.github.saboteur.beeline.detailservice.repository.impl.SessionRepositoryImpl
+import io.mockk.clearAllMocks
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.RowMapper
+import java.lang.Exception
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest(
-    classes = [
-        SessionRepositoryImpl::class,
-        H2Config::class
-    ]
-)
-@ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockKExtension::class)
 class DetailRepositoryTest {
 
-    @Autowired
-    lateinit var sessionRepository: SessionRepository
+    @MockK
+    lateinit var jdbcTemplate: JdbcTemplate
 
-    @Test
-    fun findCtnsWhenNoSuchCellIdInDatabase() {
+    @InjectMockKs
+    lateinit var sessionRepository: SessionRepositoryImpl
+
+    @BeforeAll
+    fun setUp() {
+        // setup stub
+    }
+
+    @AfterAll
+    fun cleanUp() {
+        clearAllMocks()
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(DetailRepositoryDataProvider.FindAllCtnsException::class)
+    fun findAllCtnsWhenExceptionThrown(
+        providedSql: String,
+        providedRowMapper: RowMapper<Session>
+    ) {
+        every {
+            jdbcTemplate.query(providedSql, providedRowMapper)
+        } throws Exception("")
+
         val answer = sessionRepository.findAllCtnsByCellId("TEST")
         val expected = emptyList<String>()
 
         Assertions.assertThat(answer).isEqualTo(expected)
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(DetailRepositoryDataProvider.FindAllCtns::class)
-    fun findCtnsWhenSuchCellIdInDatabase(
-        providedCellId: String,
-        providedCtns: List<String>
-    ) {
-        val answer = sessionRepository.findAllCtnsByCellId(providedCellId)
-
-        Assertions.assertThat(answer).containsAll(providedCtns)
     }
 
 }

@@ -32,7 +32,7 @@ class SessionRepositoryImpl(
 
             result ?: emptyList()
         } catch (e: Exception) {
-            logger.error(e) { "Data fetch error for Cell ID = $cellId" }
+            logger.error { "Data fetch error for Cell ID = $cellId, error: ${e.localizedMessage}" }
             emptyList()
         }
 
