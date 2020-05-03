@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 import org.springframework.web.client.ResourceAccessException
+import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -51,10 +52,10 @@ class DetailServiceTest {
     @Test
     fun getCallerProfileWhenNoSuchCellIdInDatabase() {
         every {
-            sessionRepository.findAllCtnsByCellId("TEST")
+            sessionRepository.findAllCtnsByCellId(testCellId)
         } returns emptyList()
 
-        val answer = detailService.getCallerProfile("TEST")
+        val answer = detailService.getCallerProfile(testCellId)
         val expected = emptyList<CallerProfile>()
 
         Assertions.assertThat(answer).isEqualTo(expected)
@@ -63,7 +64,7 @@ class DetailServiceTest {
     @Test
     fun getCallerProfileForValidCellIdButUnavailableProfileService() {
         every {
-            sessionRepository.findAllCtnsByCellId("TEST")
+            sessionRepository.findAllCtnsByCellId(testCellId)
         } returns listOf("1234567890", "1234567891")
 
         coEvery {
@@ -89,7 +90,42 @@ class DetailServiceTest {
             restTemplate.getForObject(urls[1], ProfileDto::class.java)
         } throws ResourceAccessException("")
 
-        val answer = detailService.getCallerProfile("TEST")
+        val answer = detailService.getCallerProfile(testCellId)
+        val expected = emptyList<CallerProfile>()
+
+        Assertions.assertThat(answer).isEqualTo(expected)
+    }
+
+    @Test
+    fun getCallerProfileForValidCellIdButExceptionThrown() {
+        every {
+            sessionRepository.findAllCtnsByCellId(testCellId)
+        } returns listOf("555555555", "444444444")
+
+        coEvery {
+            restProperties.profileServiceUrl
+        } returns "http://localhost:8941/api/v1/profileservice"
+
+        val urls = listOf(
+            StringBuilder()
+                .append(restProperties.profileServiceUrl)
+                .append("/getProfileByCtn?ctn=555555555")
+                .toString(),
+            StringBuilder()
+                .append(restProperties.profileServiceUrl)
+                .append("/getProfileByCtn?ctn=444444444")
+                .toString()
+        )
+
+        coEvery {
+            restTemplate.getForObject(urls[0], ProfileDto::class.java)
+        } throws RestClientResponseException("message", 0, "status", null, null, null)
+
+        coEvery {
+            restTemplate.getForObject(urls[1], ProfileDto::class.java)
+        } throws RestClientResponseException("message", 0, "status", null, null, null)
+
+        val answer = detailService.getCallerProfile(testCellId)
         val expected = emptyList<CallerProfile>()
 
         Assertions.assertThat(answer).isEqualTo(expected)
@@ -103,7 +139,7 @@ class DetailServiceTest {
         providedCtns: List<String>
     ) {
         every {
-            sessionRepository.findAllCtnsByCellId("TEST")
+            sessionRepository.findAllCtnsByCellId(testCellId)
         } returns providedCtns
 
         coEvery {
@@ -129,9 +165,13 @@ class DetailServiceTest {
             restTemplate.getForObject(urls[1], ProfileDto::class.java)
         } returns providedProfileDtos[1]
 
-        val answer = detailService.getCallerProfile("TEST")
+        val answer = detailService.getCallerProfile(testCellId)
 
         Assertions.assertThat(answer).containsAll(providedCallerProfiles)
+    }
+
+    companion object {
+        const val testCellId = "TEST"
     }
 
 }

@@ -10,6 +10,7 @@ import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -36,6 +37,19 @@ class DetailRepositoryTest {
     @AfterAll
     fun cleanUp() {
         clearAllMocks()
+    }
+
+    @Test
+    fun testSessionModel() {
+        val session = Session(
+            cellId = "12345",
+            ctn = "1234567890"
+        )
+
+        with (session) {
+            Assertions.assertThat(cellId).isEqualTo("12345")
+            Assertions.assertThat(ctn).isEqualTo("1234567890")
+        }
     }
 
     @ParameterizedTest
