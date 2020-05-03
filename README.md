@@ -1,6 +1,7 @@
 # beeline-task
 
 ![Beeline-CI](https://github.com/5aboteur/beeline-task/workflows/Beeline-CI/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=5aboteur_beeline-task&metric=alert_status)](https://sonarcloud.io/dashboard?id=5aboteur_beeline-task)
 
 ## Linux
 
