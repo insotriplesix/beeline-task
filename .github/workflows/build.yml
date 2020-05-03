@@ -1,4 +1,4 @@
-name: Beeline-CI
+name: build
 
 on:
   push:
