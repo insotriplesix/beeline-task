@@ -1,10 +1,10 @@
 # beeline-task
 
-![Beeline-CI](https://github.com/5aboteur/beeline-task/workflows/Beeline-CI/badge.svg)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=5aboteur_beeline-task&metric=alert_status)](https://sonarcloud.io/dashboard?id=5aboteur_beeline-task)
+![build](https://github.com/5aboteur/beeline-task/workflows/Beeline-CI/badge.svg)
 [![codecov](https://codecov.io/gh/5aboteur/beeline-task/branch/master/graph/badge.svg)](https://codecov.io/gh/5aboteur/beeline-task)
-
-
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=5aboteur_beeline-task&metric=alert_status)](https://sonarcloud.io/dashboard?id=5aboteur_beeline-task)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=5aboteur_beeline-task&metric=code_smells)](https://sonarcloud.io/dashboard?id=5aboteur_beeline-task)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=5aboteur_beeline-task&metric=ncloc)](https://sonarcloud.io/dashboard?id=5aboteur_beeline-task)
 
 ## Linux
 
