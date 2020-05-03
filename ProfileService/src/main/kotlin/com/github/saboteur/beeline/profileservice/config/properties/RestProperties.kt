@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 data class RestProperties(
     var externalServiceUrl: String = "",
     var externalServiceName: String = "",
-    var connectionTimeout: Int = 0,
+    var establishingConnectionTimeout: Int = 250,
+    var readConnectionTimeout: Int = 1000,
     var fields: String = ""
 )

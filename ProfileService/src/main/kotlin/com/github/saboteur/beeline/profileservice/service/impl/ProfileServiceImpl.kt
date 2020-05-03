@@ -12,6 +12,7 @@ import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
+import kotlin.system.measureTimeMillis
 
 @Service
 class ProfileServiceImpl(
@@ -67,13 +68,19 @@ class ProfileServiceImpl(
 
         var result: RandomUserProfileDto? = null
 
-        try {
-            result = restTemplate.getForObject(url, RandomUserProfileDto::class.java)
-            if (result?.error != null) {
-                logger.info { "Cannot fetch data from external service: $result.error" }
+        measureTimeMillis {
+            try {
+                result = restTemplate.getForObject(url, RandomUserProfileDto::class.java)
+                if (result?.error != null) {
+                    logger.info { "Cannot fetch data from external service: $result.error" }
+                }
+            } catch (e: RestClientResponseException) {
+                logger.error { "An exception occurred for CTN = $ctn: " + e.localizedMessage }
             }
-        } catch (e: RestClientResponseException) {
-            logger.error { "An exception occurred for CTN = $ctn: " + e.localizedMessage }
+        }.also { time ->
+            logger.info {
+                "GET request for $url took $time ms"
+            }
         }
 
         return result

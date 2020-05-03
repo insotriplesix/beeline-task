@@ -16,8 +16,10 @@ app:
     username: ${POSTGRES_USER:ds}
     password: ${POSTGRES_PASSWORD:ds}
     schema: ${POSTGRES_DB:public}
-    connection-timeout: 2000
+    connection-timeout: 20000
     connection-init-sql: ALTER ROLE ${POSTGRES_USER:ds} SET search_path TO ${POSTGRES_DB:public}
     connection-test-query: SELECT 1
   rest:
     profile-service-url: ${PROFILE_SERVICE_URL:http://localhost:8941/api/v1/profileservice}
+    establishing-connection-timeout: 250
+    read-connection-timeout: 1750

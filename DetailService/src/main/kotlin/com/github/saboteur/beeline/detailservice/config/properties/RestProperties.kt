@@ -8,5 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "app.rest")
 data class RestProperties(
-    var profileServiceUrl: String = ""
+    var profileServiceUrl: String = "",
+    var establishingConnectionTimeout: Int = 250,
+    var readConnectionTimeout: Int = 1750
 )
