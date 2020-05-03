@@ -1,5 +1,6 @@
 package com.github.saboteur.beeline.detailservice.config.properties
 
+import com.github.saboteur.beeline.detailservice.repository.H2Properties
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,6 +21,9 @@ class DetailServicePropertiesTest {
     lateinit var appProperties: AppProperties
 
     @Autowired
+    lateinit var h2Properties: H2Properties
+
+    @Autowired
     lateinit var postgresProperties: PostgresProperties
 
     @Autowired
@@ -27,6 +31,7 @@ class DetailServicePropertiesTest {
 
     @EnableConfigurationProperties(
         AppProperties::class,
+        H2Properties::class,
         PostgresProperties::class,
         RestProperties::class
     )
@@ -39,6 +44,16 @@ class DetailServicePropertiesTest {
         // Check AppProperties
         with (appProperties) {
             Assertions.assertThat(serviceName).isEqualTo("detail-service")
+        }
+
+        // Check H2Properties
+        with (h2Properties) {
+            Assertions.assertThat(driverClassName).isEqualTo("org.h2.Driver")
+            Assertions
+                .assertThat(url)
+                .isEqualTo("jdbc:h2:mem:ds;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:h2_init.sql'")
+            Assertions.assertThat(username).isEqualTo("ds")
+            Assertions.assertThat(password).isEqualTo("ds")
         }
 
         // Check PostgresProperties

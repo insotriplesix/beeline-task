@@ -10,6 +10,11 @@ spring:
 
 app:
   service-name: ${SERVICE_NAME:detail-service}
+  h2:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:ds;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:h2_init.sql'
+    username: ds
+    password: ds
   postgres:
     driver-class-name: ${POSTGRES_DRIVER:org.postgresql.Driver}
     jdbc-url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/ds}

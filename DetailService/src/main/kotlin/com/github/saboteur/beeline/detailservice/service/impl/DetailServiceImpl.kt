@@ -27,7 +27,7 @@ class DetailServiceImpl(
     override fun getCallerProfile(cellId: String): List<CallerProfile> {
         val ctns =
             sessionRepository
-                .findAllCtnByCellId(cellId)
+                .findAllCtnsByCellId(cellId)
                 .also {
                     if (it.isEmpty()) {
                         logger.info { "CTNs for Cell ID = $cellId weren't found in database" }

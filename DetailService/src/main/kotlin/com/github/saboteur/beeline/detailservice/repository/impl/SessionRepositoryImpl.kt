@@ -13,7 +13,7 @@ class SessionRepositoryImpl(
     private val template: JdbcTemplate
 ) : SessionRepository {
 
-    override fun findAllCtnByCellId(cellId: String): List<String> =
+    override fun findAllCtnsByCellId(cellId: String): List<String> =
         try {
             val rowMapper = RowMapper { rs, _ ->
                 Session(rs.getString("cell_id"), rs.getString("ctn"))

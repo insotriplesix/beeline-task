@@ -51,7 +51,7 @@ class DetailServiceTest {
     @Test
     fun getCallerProfileWhenNoSuchCellIdInDatabase() {
         every {
-            sessionRepository.findAllCtnByCellId("TEST")
+            sessionRepository.findAllCtnsByCellId("TEST")
         } returns emptyList()
 
         val answer = detailService.getCallerProfile("TEST")
@@ -63,7 +63,7 @@ class DetailServiceTest {
     @Test
     fun getCallerProfileForValidCellIdButUnavailableProfileService() {
         every {
-            sessionRepository.findAllCtnByCellId("TEST")
+            sessionRepository.findAllCtnsByCellId("TEST")
         } returns listOf("1234567890", "1234567891")
 
         coEvery {
@@ -103,7 +103,7 @@ class DetailServiceTest {
         providedCtns: List<String>
     ) {
         every {
-            sessionRepository.findAllCtnByCellId("TEST")
+            sessionRepository.findAllCtnsByCellId("TEST")
         } returns providedCtns
 
         coEvery {
