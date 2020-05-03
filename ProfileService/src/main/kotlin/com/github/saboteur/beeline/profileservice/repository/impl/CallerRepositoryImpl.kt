@@ -29,7 +29,7 @@ class CallerRepositoryImpl(
 
             result?.callerId ?: ""
         } catch (e: Exception) {
-            logger.error(e) { "Data fetch error for CTN = $ctn" }
+            logger.error { "Data fetch error for CTN = $ctn, error: ${e.localizedMessage}" }
             ""
         }
 
