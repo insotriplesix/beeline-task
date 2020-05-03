@@ -40,15 +40,15 @@ class ProfileServiceDataProvider {
             val providedRestProperties = RestProperties(
                 externalServiceUrl = "externalServiceUrl",
                 externalServiceName = "randomuser",
-                fields = "name,email"
+                fields = fields
             )
 
             val providedReqUrl =
                 StringBuilder()
                     .append(providedRestProperties.externalServiceUrl)
-                    .append("/api/?phone=")
+                    .append(apiSuffix)
                     .append("TEST")
-                    .append("&inc=")
+                    .append(incSuffix)
                     .append(providedRestProperties.fields)
                     .toString()
 
@@ -93,15 +93,15 @@ class ProfileServiceDataProvider {
             val providedRestProperties = RestProperties(
                 externalServiceUrl = "externalServiceUrl",
                 externalServiceName = "randomuser",
-                fields = "name,email"
+                fields = fields
             )
 
             val providedReqUrl =
                 StringBuilder()
                     .append(providedRestProperties.externalServiceUrl)
-                    .append("/api/?phone=")
+                    .append(apiSuffix)
                     .append("1234567890")
-                    .append("&inc=")
+                    .append(incSuffix)
                     .append(providedRestProperties.fields)
                     .toString()
 
@@ -137,15 +137,15 @@ class ProfileServiceDataProvider {
             val providedRestProperties = RestProperties(
                 externalServiceUrl = "externalServiceUrl",
                 externalServiceName = "randomuser",
-                fields = "name,email"
+                fields = fields
             )
 
             val providedReqUrl =
                 StringBuilder()
                     .append(providedRestProperties.externalServiceUrl)
-                    .append("/api/?phone=")
+                    .append(apiSuffix)
                     .append("1234567890")
-                    .append("&inc=")
+                    .append(incSuffix)
                     .append(providedRestProperties.fields)
                     .toString()
 
@@ -192,9 +192,9 @@ class ProfileServiceDataProvider {
             val providedReqUrl =
                 StringBuilder()
                     .append(providedRestProperties.externalServiceUrl)
-                    .append("/api/?phone=")
+                    .append(apiSuffix)
                     .append("TEST")
-                    .append("&inc=")
+                    .append(incSuffix)
                     .append(providedRestProperties.fields)
                     .toString()
 
@@ -204,6 +204,9 @@ class ProfileServiceDataProvider {
 
     companion object {
         const val exampleId = "03e17537-30de-4598-a816-108945fa68b4"
+        const val apiSuffix = "/api/?phone="
+        const val incSuffix = "&inc="
+        const val fields = "name,email"
     }
 
 }

@@ -21,18 +21,18 @@ class ProfileServicePropertiesTest {
     lateinit var appProperties: AppProperties
 
     @Autowired
-    lateinit var h2Properties: H2Properties
+    lateinit var postgresProperties: PostgresProperties
 
     @Autowired
-    lateinit var postgresProperties: PostgresProperties
+    lateinit var h2Properties: H2Properties
 
     @Autowired
     lateinit var restProperties: RestProperties
 
     @EnableConfigurationProperties(
         AppProperties::class,
-        H2Properties::class,
         PostgresProperties::class,
+        H2Properties::class,
         RestProperties::class
     )
     class TestConfigProperties {
@@ -46,16 +46,6 @@ class ProfileServicePropertiesTest {
             Assertions.assertThat(serviceName).isEqualTo("profile-service")
         }
 
-        // Check H2Properties
-        with (h2Properties) {
-            Assertions.assertThat(driverClassName).isEqualTo("org.h2.Driver")
-            Assertions
-                .assertThat(url)
-                .isEqualTo("jdbc:h2:mem:ps;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:h2_init.sql'")
-            Assertions.assertThat(username).isEqualTo("ps")
-            Assertions.assertThat(password).isEqualTo("ps")
-        }
-
         // Check PostgresProperties
         with (postgresProperties) {
             Assertions.assertThat(driverClassName).isEqualTo("org.postgresql.Driver")
@@ -66,6 +56,16 @@ class ProfileServicePropertiesTest {
             Assertions.assertThat(connectionTimeout).isEqualTo(20000L)
             Assertions.assertThat(connectionInitSql).isEqualTo("ALTER ROLE ps SET search_path TO public")
             Assertions.assertThat(connectionTestQuery).isEqualTo("SELECT 1")
+        }
+
+        // Check H2Properties
+        with (h2Properties) {
+            Assertions.assertThat(driverClassName).isEqualTo("org.h2.Driver")
+            Assertions
+                .assertThat(url)
+                .isEqualTo("jdbc:h2:mem:ps;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:h2_init.sql'")
+            Assertions.assertThat(username).isEqualTo("ps")
+            Assertions.assertThat(password).isEqualTo("ps")
         }
 
         // Check RestProperties

@@ -32,10 +32,10 @@ class ProfileServiceConfigTest {
     lateinit var postgresConfig: PostgresConfig
 
     @Autowired
-    lateinit var restConfig: RestConfig
+    lateinit var swaggerConfig: SwaggerConfig
 
     @Autowired
-    lateinit var swaggerConfig: SwaggerConfig
+    lateinit var restConfig: RestConfig
 
     @BeforeAll
     fun setUp() {
@@ -58,15 +58,15 @@ class ProfileServiceConfigTest {
 
         Assertions.assertThat(postgresConfig.getPostgresDataSource()).isNotNull
 
+        // Check SwaggerConfig
+        Assertions.assertThat(SwaggerConfig.API_VERSION).isEqualTo("v1")
+        Assertions.assertThat(swaggerConfig.api()).isNotNull
+
         // Check RestConfig
         with (restConfig) {
             Assertions.assertThat(restTemplate()).isNotNull
             Assertions.assertThat(restTemplate().requestFactory).isNotNull
         }
-
-        // Check SwaggerConfig
-        Assertions.assertThat(SwaggerConfig.API_VERSION).isEqualTo("v1")
-        Assertions.assertThat(swaggerConfig.api()).isNotNull
     }
 
 }
