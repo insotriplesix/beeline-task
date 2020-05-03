@@ -1,5 +1,6 @@
 package com.github.saboteur.beeline.profileservice.repository
 
+import com.github.saboteur.beeline.profileservice.model.AggregatedInfo
 import com.github.saboteur.beeline.profileservice.model.Caller
 import com.github.saboteur.beeline.profileservice.repository.impl.CallerRepositoryImpl
 import io.mockk.clearAllMocks
@@ -49,6 +50,29 @@ class ProfileRepositoryTest {
         with (caller) {
             Assertions.assertThat(ctn).isEqualTo("1234567890")
             Assertions.assertThat(callerId).isEqualTo("03e17537-30de-4598-a816-108945fa68b4")
+        }
+    }
+
+    @Test
+    fun testAggregatedInfo() {
+        val aggregatedInfo = AggregatedInfo(
+            ctn = "1234567890",
+            callerId = "03e17537-30de-4598-a816-108945fa68b4",
+            gender = null,
+            titleName = null,
+            firstName = "Pavel",
+            lastName = "Durov",
+            email = "pdurov@hotmail.com"
+        )
+
+        with (aggregatedInfo) {
+            Assertions.assertThat(ctn).isEqualTo("1234567890")
+            Assertions.assertThat(callerId).isEqualTo("03e17537-30de-4598-a816-108945fa68b4")
+            Assertions.assertThat(gender).isNull()
+            Assertions.assertThat(titleName).isNull()
+            Assertions.assertThat(firstName).isEqualTo("Pavel")
+            Assertions.assertThat(lastName).isEqualTo("Durov")
+            Assertions.assertThat(email).isEqualTo("pdurov@hotmail.com")
         }
     }
 
