@@ -11,7 +11,6 @@ import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -40,11 +39,15 @@ class ProfileRepositoryTest {
         clearAllMocks()
     }
 
-    @Test
-    fun testCallerModel() {
+    @ParameterizedTest
+    @ArgumentsSource(ProfileRepositoryDataProvider.FindCallerId::class)
+    fun testCallerModel(
+        providedCtn: String,
+        providedCallerId: String
+    ) {
         val caller = Caller(
-            ctn = "1234567890",
-            callerId = "03e17537-30de-4598-a816-108945fa68b4"
+            ctn = providedCtn,
+            callerId = providedCallerId
         )
 
         with (caller) {
@@ -53,11 +56,15 @@ class ProfileRepositoryTest {
         }
     }
 
-    @Test
-    fun testAggregatedInfo() {
+    @ParameterizedTest
+    @ArgumentsSource(ProfileRepositoryDataProvider.FindCallerId::class)
+    fun testAggregatedInfo(
+        providedCtn: String,
+        providedCallerId: String
+    ) {
         val aggregatedInfo = AggregatedInfo(
-            ctn = "1234567890",
-            callerId = "03e17537-30de-4598-a816-108945fa68b4",
+            ctn = providedCtn,
+            callerId = providedCallerId,
             gender = null,
             titleName = null,
             firstName = "Pavel",
@@ -83,8 +90,24 @@ class ProfileRepositoryTest {
         providedRowMapper: RowMapper<Caller>
     ) {
         every {
-            jdbcTemplate.query(providedSql, providedRowMapper)
+            jdbcTemplate.queryForObject(providedSql, providedRowMapper)
         } throws Exception("")
+
+        val answer = callerRepository.findCallerIdByCtn("TEST")
+        val expected = ""
+
+        Assertions.assertThat(answer).isEqualTo(expected)
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(ProfileRepositoryDataProvider.FindCallerIdException::class)
+    fun findCallerIdWhenResponseIsNull(
+        providedSql: String,
+        providedRowMapper: RowMapper<Caller>
+    ) {
+        every {
+            jdbcTemplate.queryForObject(providedSql, providedRowMapper)
+        } returns null
 
         val answer = callerRepository.findCallerIdByCtn("TEST")
         val expected = ""
