@@ -25,12 +25,15 @@ class DetailServiceImpl(
 ) : DetailService {
 
     override fun getCallerProfile(cellId: String): List<CallerProfile> {
-        val ctns = sessionRepository.findAllCtnByCellId(cellId)
-
-        if (ctns.isEmpty()) {
-            logger.info { "CTNs for Cell ID = $cellId weren't found in database" }
-            return emptyList()
-        }
+        val ctns =
+            sessionRepository
+                .findAllCtnByCellId(cellId)
+                .also {
+                    if (it.isEmpty()) {
+                        logger.info { "CTNs for Cell ID = $cellId weren't found in database" }
+                        return emptyList()
+                    }
+                }
 
         val result = ConcurrentLinkedQueue<CallerProfile>()
 
@@ -47,9 +50,11 @@ class DetailServiceImpl(
                         logger.debug { "Thread = ${Thread.currentThread().name}, URL = $url" }
 
                         try {
-                            val response = restTemplate.getForObject(url, ProfileDto::class.java)
-                            if (response != null)
-                                result.add(ProfileToCallerProfileMapper[response])
+                            restTemplate
+                                .getForObject(url, ProfileDto::class.java)
+                                ?.let {
+                                    result.add(ProfileToCallerProfileMapper[it])
+                                }
                         } catch (e: ResourceAccessException) {
                             logger.error { "Resource unavailable for CTN = $ctn: " + e.localizedMessage }
                         } catch (e: RestClientResponseException) {

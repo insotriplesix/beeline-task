@@ -40,6 +40,7 @@ class DetailServiceTest {
 
     @BeforeAll
     fun setUp() {
+        // setup stub
     }
 
     @AfterAll
