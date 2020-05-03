@@ -1,0 +1,32 @@
+server:
+  port: ${SERVER_PORT:8941}
+
+spring:
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    placeholders:
+      schema: ${app.postgres.schema}
+
+app:
+  service-name: ${SERVICE_NAME:profile-service}
+  h2:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:ps;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:h2_init.sql'
+    username: ps
+    password: ps
+  postgres:
+    driver-class-name: ${POSTGRES_DRIVER:org.postgresql.Driver}
+    jdbc-url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/ps}
+    username: ${POSTGRES_USER:ps}
+    password: ${POSTGRES_PASSWORD:ps}
+    schema: ${POSTGRES_DB:public}
+    connection-timeout: 20000
+    connection-init-sql: ALTER ROLE ${POSTGRES_USER:ps} SET search_path TO ${POSTGRES_DB:public}
+    connection-test-query: SELECT 1
+  rest:
+    external-service-url: ${EXTERNAL_SERVICE_URL:https://randomuser.me}
+    external-service-name: randomuser
+    establishing-connection-timeout: 250
+    read-connection-timeout: 1000
+    fields: name,email
