@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -33,6 +34,11 @@ class DetailControllerTest {
 
     @Autowired
     lateinit var detailService: DetailService
+
+    @Test
+    fun testApiVersion() {
+        Assertions.assertThat(DetailServiceControllerApi.API_VERSION).isEqualTo("v1")
+    }
 
     @Test
     fun getCallerProfileByCellIdWhenNoDataFound() {
