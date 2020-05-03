@@ -6,6 +6,7 @@ import mu.KotlinLogging
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
+import kotlin.system.measureTimeMillis
 
 @Repository
 class CallerRepositoryImpl(
@@ -18,7 +19,14 @@ class CallerRepositoryImpl(
                 Caller(rs.getString("ctn"), rs.getString("caller_id"))
             }
             val sql = "SELECT ctn, caller_id FROM callers WHERE ctn = '$ctn'"
-            val result = template.queryForObject(sql, rowMapper)
+            var result: Caller? = null
+
+            measureTimeMillis {
+                result = template.queryForObject(sql, rowMapper)
+            }.also { time ->
+                logger.debug { "Query < $sql > took $time ms" }
+            }
+
             result?.callerId ?: ""
         } catch (e: Exception) {
             logger.error(e) { "Data fetch error for CTN = $ctn" }

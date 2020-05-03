@@ -78,7 +78,7 @@ class ProfileServiceImpl(
                 logger.error { "An exception occurred for CTN = $ctn: " + e.localizedMessage }
             }
         }.also { time ->
-            logger.info {
+            logger.debug {
                 "GET request for $url took $time ms"
             }
         }
